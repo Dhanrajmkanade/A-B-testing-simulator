@@ -14,19 +14,19 @@ Stimulation of our A/B test data. We'll create a dataset with user activity, ass
 import numpy as np
 import pandas as pd
 
-# --- Parameters for Data Generation ---
+#  Parameters for Data Generation 
 n_users = 10000  # Total number of fake users
 control_conversion_rate = 0.10  # 10% conversion for control group
 treatment_conversion_rate = 0.12  # 12% conversion for treatment group (slightly higher)
 
-# --- Generate User IDs and Group Assignment ---
+# Generate User IDs and Group Assignment 
 user_ids = np.arange(1, n_users + 1)
 groups = np.random.choice(['Control', 'Treatment'], size=n_users, p=[0.5, 0.5]) # 50/50 split
 
-# --- Simulate Page Views (e.g., 1 to 5 page views) ---
+#  Simulate Page Views (e.g., 1 to 5 page views) 
 page_views = np.random.randint(1, 6, size=n_users)
 
-# --- Simulate Conversions based on Group ---
+# Simulate Conversions based on Group 
 converted = np.zeros(n_users, dtype=int)
 
 for i, group in enumerate(groups):
@@ -35,7 +35,7 @@ for i, group in enumerate(groups):
     else: # Treatment group
         converted[i] = np.random.choice([0, 1], p=[1 - treatment_conversion_rate, treatment_conversion_rate])
 
-# --- Create DataFrame ---
+# Create DataFrame 
 data = {
     'user_id': user_ids,
     'group': groups,
@@ -114,12 +114,12 @@ import statsmodels.api as sm
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# --- Re-Define Data Generation Parameters (from Phase 1) ---
+#  Re-Define Data Generation Parameters (from Phase 1) 
 n_users = 10000  # Total number of fake users
 control_conversion_rate = 0.10  # 10% conversion for control group
 treatment_conversion_rate = 0.12  # 12% conversion for treatment group (slightly higher)
 
-# --- Re-Generate User IDs and Group Assignment ---
+#  Re-Generate User IDs and Group Assignment 
 user_ids = np.arange(1, n_users + 1)
 groups = np.random.choice(['Control', 'Treatment'], size=n_users, p=[0.5, 0.5])
 page_views = np.random.randint(1, 6, size=n_users)
@@ -131,7 +131,7 @@ for i, group in enumerate(groups):
     else: # Treatment group
         converted[i] = np.random.choice([0, 1], p=[1 - treatment_conversion_rate, treatment_conversion_rate])
 
-# --- Re-Create DataFrame ---
+#  Re-Create DataFrame 
 data = {
     'user_id': user_ids,
     'group': groups,
@@ -140,13 +140,13 @@ data = {
 }
 df = pd.DataFrame(data)
 
-# --- Re-Calculate Conversion Rates and Summary Stats (from Phase 2) ---
+#  Re-Calculate Conversion Rates and Summary Stats (from Phase 2) 
 conversion_rates = df.groupby('group')['converted'].mean().reset_index()
 conversion_rates.columns = ['group', 'conversion_rate']
 summary_stats = df.groupby('group')['converted'].agg(total_users='count', total_conversions='sum').reset_index()
 summary_stats['conversion_rate'] = summary_stats['total_conversions'] / summary_stats['total_users']
 
-# --- Re-Perform Two-Proportion Z-Test (from Phase 3) ---
+#  Re-Perform Two-Proportion Z-Test (from Phase 3) 
 n_control = summary_stats.loc[summary_stats['group'] == 'Control', 'total_users'].iloc[0]
 x_control = summary_stats.loc[summary_stats['group'] == 'Control', 'total_conversions'].iloc[0]
 n_treatment = summary_stats.loc[summary_stats['group'] == 'Treatment', 'total_users'].iloc[0]
@@ -175,7 +175,7 @@ plt.show()
 # Business Recommendation based on P-value
 alpha = 0.05 # Significance level
 
-print("\n--- Business Recommendation ---")
+print("\n Business Recommendation ")
 if p_value < alpha:
     print(f"The A/B test results indicate a statistically significant difference in conversion rates between the Control and Treatment groups (P-value = {p_value:.3f}). ")
     print(f"The Treatment group achieved a conversion rate of {conversion_rates.loc[conversion_rates['group'] == 'Treatment', 'conversion_rate'].iloc[0]:.2%}, which is higher than the Control group's {conversion_rates.loc[conversion_rates['group'] == 'Control', 'conversion_rate'].iloc[0]:.2%}. ")
